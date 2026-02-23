@@ -1,0 +1,53 @@
+from machine import Pin, PWM
+import time
+
+eye1 = PWM(Pin(18))
+eye2 = PWM(Pin(19))
+eye1.freq(1000)
+eye2.freq(1000)
+
+pb = Pin(21, Pin.IN, Pin.PULL_UP)
+ir = Pin(15, Pin.IN, Pin.PULL_UP)
+
+sm = PWM(Pin(22))
+sm.freq(50)
+
+eye1.duty(0)
+eye2.duty(0)
+sm.duty(75)
+
+while True:
+
+    pb_val = pb.value()
+
+    if pb_val == 0:
+
+        print("game on")
+
+        while True:
+
+            ir_val = ir.value()
+
+            if ir_val == 0:
+
+                print("cat triggered")
+
+                eye1.duty(1023)
+                eye2.duty(1023)
+
+                sm.duty(40)
+                time.sleep(0.3)
+
+                sm.duty(115)
+                time.sleep(0.3)
+
+                sm.duty(75)
+
+                time.sleep(2)
+
+                eye1.duty(0)
+                eye2.duty(0)
+
+                print("game over")
+
+                break
